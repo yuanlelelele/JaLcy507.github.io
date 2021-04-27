@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>preprocess | networkx和plotly | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">preprocess | networkx和plotly</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2020&nbsp;&nbsp;14:03:21</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h1><p>近期处理数据有个需求是把文本式的类列表生成树结构，并打印出来。我处理的方式是先把单条样例解析成三元组的形式:<code>(parent, relation, child)</code>，卡壳的地方是找一个简易的第三方库优雅生成树结构。但无奈的是我的需求里每条样例孩子节点数不一层数也不一，画树时候距离不好确定（实则是懒得自己动手写），最终得到的树结构是以图的形式呈现的。但这个过程还是稍显曲折，第一次选的代码实在不好上手，调了半天也没得到想要的，最后果断放弃了，后来用的networkx生成的图还算能看。写这篇文是想记录下networkx和plotly这俩工具，感觉以后画图应该能用到~</p>
+<h1 id="networkx"><a href="#networkx" class="headerlink" title="networkx"></a>networkx</h1><p>networkx高端的地方是在于它有好几个已设计好的图布局，用几行代码调用即可生成一个网络结构图。也可以用来设计复杂的神经网络图。</p>
+<ol>
+<li>导入库<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> natplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure></li>
+<li>图的创建<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">G = nx.Graph() <span class="comment">#创建无向图</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加节点和边（注：节点名称相同的不会重复添加）</span></span><br><span class="line">G.add_node(<span class="number">1</span>)</span><br><span class="line">G.add_edge(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">nx.draw(G)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure></li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 创建有向图</span></span><br><span class="line">G = nx.DiGraph() </span><br><span class="line">G.add_edge(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">G.add_edge(<span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">G.to_undirected()  <span class="comment"># 转换成无向图</span></span><br><span class="line"><span class="built_in">print</span>(G.edges)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 加权图</span></span><br><span class="line">G = nx.DiGraph()</span><br><span class="line">G.add_weighted_edges_from([(<span class="number">0</span>,<span class="number">1</span>,<span class="number">3.0</span>), (<span class="number">1</span>,<span class="number">2</span>,<span class="number">7.5</span>)]) <span class="comment"># 给０１边加权３，　１２边加权７．５</span></span><br><span class="line"><span class="built_in">print</span>(G.get_edge_data(<span class="number">1</span>,<span class="number">2</span>))  <span class="comment"># 获得１２边的属性</span></span><br><span class="line"></span><br><span class="line">G.add_weighted_edges_from([(<span class="number">2</span>,<span class="number">3</span>,<span class="number">5</span>)], weight=<span class="string">&#x27;color&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(G.edges.data())</span><br><span class="line"></span><br><span class="line">G.node[<span class="number">1</span>][<span class="string">&#x27;size&#x27;</span>] = <span class="number">10</span></span><br><span class="line"><span class="built_in">print</span>(G.nodes.data())</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">G = nx.DiGraph()</span><br><span class="line">G.add_edge(<span class="string">&#x27;x&#x27;</span>,<span class="string">&#x27;a&#x27;</span>, capacity=<span class="number">3.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;x&#x27;</span>,<span class="string">&#x27;b&#x27;</span>, capacity=<span class="number">1.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;a&#x27;</span>,<span class="string">&#x27;c&#x27;</span>, capacity=<span class="number">3.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;c&#x27;</span>, capacity=<span class="number">5.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;b&#x27;</span>,<span class="string">&#x27;d&#x27;</span>, capacity=<span class="number">4.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;d&#x27;</span>,<span class="string">&#x27;e&#x27;</span>, capacity=<span class="number">2.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;c&#x27;</span>,<span class="string">&#x27;y&#x27;</span>, capacity=<span class="number">2.0</span>)</span><br><span class="line">G.add_edge(<span class="string">&#x27;e&#x27;</span>,<span class="string">&#x27;y&#x27;</span>, capacity=<span class="number">3.0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将参数画到图上</span></span><br><span class="line">pos = nx.spring_layout(G)</span><br><span class="line">capacity = nx.get_edge_attributes(G, <span class="string">&#x27;capacity&#x27;</span>)</span><br><span class="line"><span class="comment"># nx.draw_networkx_nodes(G, pos)</span></span><br><span class="line"><span class="comment"># nx.draw_networkx_edges(G, pos)</span></span><br><span class="line"><span class="comment"># nx.draw_networkx_labels(G, pos)</span></span><br><span class="line"><span class="comment"># nx.draw_networkx_edge_labels(G,pos,capacity)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加样式</span></span><br><span class="line">- `node_size`:  指定节点的尺寸大小(默认是<span class="number">300</span>，单位未知，就是上图中那么大的点)</span><br><span class="line">- `node_color`:  指定节点的颜色 (默认是红色，可以用字符串简单标识颜色，例如<span class="string">&#x27;r&#x27;</span>为红色，<span class="string">&#x27;b&#x27;</span>为绿色等，具体可查看手册)</span><br><span class="line">- `node_shape`:  节点的形状（默认是圆形，用字符串<span class="string">&#x27;o&#x27;</span>标识，具体可查看手册）</span><br><span class="line">- `alpha`: 透明度 (默认是<span class="number">1.0</span>，不透明，<span class="number">0</span>为完全透明)</span><br><span class="line">- `width`: 边的宽度 (默认为<span class="number">1.0</span>)</span><br><span class="line">- `edge_color`: 边的颜色(默认为黑色)</span><br><span class="line">- `style`: 边的样式(默认为实现，可选：solid|dashed|dotted,dashdot)</span><br><span class="line">- `with_labels`: 节点是否带标签（默认为<span class="literal">True</span>）</span><br><span class="line">- `font_size`: 节点标签字体大小 (默认为<span class="number">12</span>)</span><br><span class="line">- `font_color`: 节点标签字体颜色（默认为黑色）</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>一些经典图布局<blockquote>
+<p>[<br> “bipartite_layout”,<br> “circular_layout”, # 节点在一个圆环上均匀分布<br> “kamada_kawai_layout”,<br> “random_layout”, # 节点随机分布<br> “rescale_layout”,<br> “rescale_layout_dict”,<br> “shell_layout”, # 节点在同心圆上分布<br> “spring_layout”, # 用Fruchterman-Reingold算法排列节点<br> “spectral_layout”, # 根据图的拉普拉斯特征向量排列节点<br> “planar_layout”,<br> “fruchterman_reingold_layout”,<br> “spiral_layout”,<br> “multipartite_layout”,<br>]</p>
+</blockquote>
+</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">布局用pos参数指定，例如：nx.draw(G,pos = nx.circular_layout(G))</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>一些复杂网络案例</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#规则图</span></span><br><span class="line"><span class="comment">#（用random_graphs.random_regular_graph(d, n)方法可以生成一个含有n个节点，每个节点有d个邻居节点的规则图）</span></span><br><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">RG = nx.random_graphs.random_regular_graph(<span class="number">3</span>,<span class="number">20</span>)  <span class="comment">#生成包含20个节点、每个节点有3个邻居的规则图RG</span></span><br><span class="line">pos = nx.spectral_layout(RG)          <span class="comment">#定义一个布局，此处采用了spectral布局方式，后变还会介绍其它布局方式，注意图形上的区别</span></span><br><span class="line">nx.draw(RG,pos,with_labels=<span class="literal">False</span>,node_size = <span class="number">30</span>)  <span class="comment">#绘制规则图的图形，with_labels决定节点是非带标签（编号），node_size是节点的直径</span></span><br><span class="line">plt.show()  <span class="comment">#显示图形</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ER随机图   # 随机生成20个节点，节点间的连接概率都是0.2</span></span><br><span class="line">ER = nx.random_graphs.erdos_renyi_graph(<span class="number">20</span>, <span class="number">0.2</span>)</span><br><span class="line">pos = nx.shell_layout(ER)</span><br><span class="line">nx.draw(ER, pos, with_labels=<span class="literal">False</span>,edge_color=<span class="string">&#x27;b&#x27;</span>, alpha=<span class="number">0.3</span>, node_size=<span class="number">30</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># WS小世界网络  生成一个含有n个节点、每个节点有k个邻居、以概率p随机化重连边的WS小世界网络。</span></span><br><span class="line">WS = nx.random_graphs.watts_strogatz_graph(<span class="number">20</span>, <span class="number">4</span>, <span class="number">0.3</span>)</span><br><span class="line">pos = nx.circular_layout(WS)</span><br><span class="line">nx.draw(WS, pos, with_labels=<span class="literal">False</span>, node_size=<span class="number">30</span>, edge_color=<span class="string">&#x27;b&#x27;</span>, alpha=<span class="number">0.3</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># BA无标度网络 生成一个含有n个节点、每次加入m条边的BA无标度网络</span></span><br><span class="line">BA = nx.random_graphs.barabasi_albert_graph(<span class="number">10</span>,<span class="number">2</span>)</span><br><span class="line">pos = nx.spring_layout(BA)</span><br><span class="line">nx.draw(BA, pos, with_labels=<span class="literal">False</span>, node_size=<span class="number">30</span>, edge_color=<span class="string">&#x27;b&#x27;</span>, alpha=<span class="number">0.3</span>)</span><br><span class="line">plt.show()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 扩展ＢＡ无标度网络  节点数，添加新边数，两点间添加边的概率，边重连的概率</span></span><br><span class="line">ExBA = nx.random_graphs.extended_barabasi_albert_graph(<span class="number">200</span>, <span class="number">4</span>, <span class="number">0.4</span>, <span class="number">0.2</span>)</span><br><span class="line">pos = nx.spring_layout(ExBA)</span><br><span class="line">nx.draw(ExBA, pos, with_labels=<span class="literal">False</span>, node_size=<span class="number">30</span>, edge_color=<span class="string">&#x27;b&#x27;</span>, alpha=<span class="number">0.3</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+
+<p>5.我的案例</p>
+<p>描述：自主添加节点与边，并加入节点标签与边标签</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">load_node_info_new</span>(<span class="params">g, edges</span>):</span></span><br><span class="line">    <span class="comment"># for v in vertices:</span></span><br><span class="line">    <span class="comment">#     g.add_node(v)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> e <span class="keyword">in</span> edges:</span><br><span class="line">        g.add_edge(e[<span class="number">0</span>], e[<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># print(&quot;test nodes: &#123;&#125;&quot;.format(g.nodes()))</span></span><br><span class="line">    <span class="comment"># print(&quot;test edges: &#123;&#125;&quot;.format(g.edges()))</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> g</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">print_fig_with_nx</span>(<span class="params">edges, edge_labels, cpt_string, root_sem, fig_cnt</span>):</span></span><br><span class="line">    G = nx.DiGraph()</span><br><span class="line">    G = load_node_info_new(G, edges)</span><br><span class="line">    <span class="comment"># G.add_weighted_edges_from(weighted_edges)</span></span><br><span class="line"></span><br><span class="line">    nx.draw(G, pos=nx.circular_layout(G), with_labels=<span class="literal">True</span>, font_size=<span class="number">10</span>)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;edge labels: &quot;</span>, edge_labels)</span><br><span class="line">    nx.draw_networkx_edge_labels(G, pos=nx.circular_layout(G), edge_labels=edge_labels, font_size=<span class="number">9</span>)</span><br><span class="line"></span><br><span class="line">    plt.title(cpt_string)</span><br><span class="line">    plt.savefig(<span class="string">&#x27;../cptFig/&#x27;</span> + root_sem + <span class="built_in">str</span>(fig_cnt) + <span class="string">&#x27;.png&#x27;</span>, bbox_inches=<span class="string">&#x27;tight&#x27;</span>)</span><br><span class="line">    plt.cla()</span><br></pre></td></tr></table></figure>
+
+<p><strong>结果演示</strong></p>
+<p><img src="https://codimd.s3.shivering-isles.com/demo/uploads/upload_fee08e8746a4650921b3a0e6eab2350a.png" alt="demo"></p>
+<p><em>下列是一个案例源码参考链接：</em><br><a target="_blank" rel="noopener" href="https://networkx.github.io/documentation/latest/auto_examples/index.html">nx Gallery传送门</a></p>
+<h1 id="igraph与plotly"><a href="#igraph与plotly" class="headerlink" title="igraph与plotly"></a>igraph与plotly</h1><p><strong>igraph</strong></p>
+<blockquote>
+<p>pip install python-igraph</p>
+</blockquote>
+<p>一个igraph的tutorial：<a target="_blank" rel="noopener" href="https://igraph.org/python/doc/tutorial/tutorial.html#edge-attributes-controlling-graph-plots">igraph传送门</a><br>用这个库也可以添加节点添加边，以图的格式存储，但可视化还需借助plotly。</p>
+<p><strong>plotly</strong><br>plotly看着也很优雅，但俺还没学懂-_-这里就贴几个有用的链接吧。或许以后能用到~</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> plotly.graph_objects <span class="keyword">as</span> go</span><br></pre></td></tr></table></figure>
+<p>plotly里提供了一个graph object帮助我们不用自主添加字典，快速绘图。用这个高级类可以添加可视化图形的内容和布局，一般用法是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fig = go.Figure()</span><br><span class="line">fig.add_trace(*args)</span><br><span class="line">fig.update_layout(*args)</span><br></pre></td></tr></table></figure>
+<p>具体参数可以查阅源码~<br>几个链接：<br><a target="_blank" rel="noopener" href="https://mathpretty.com/11954.html">传送门1</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/5cc4ba219e0b">传送门2</a><br><a target="_blank" rel="noopener" href="https://plotly.com/python/tree-plots/">传送门3 Tree Plot</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/PreprocessTool/"># PreprocessTool</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/11/05/Pytorch-bug-pytorch%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E7%9A%84%E6%8A%A5%E9%94%99%E6%94%B6%E9%9B%86%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/">Pytorch bug | pytorch使用过程中的报错收集（持续更新）</a>
+            
+            
+            <a class="next" rel="next" href="/2020/10/13/ACE2005%E8%AF%AD%E6%96%99%E5%BA%93%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E5%8F%8A%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/">ACE2005语料库文件格式及内容解析</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

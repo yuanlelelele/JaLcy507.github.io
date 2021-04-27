@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>Pytorch bug | pytorch使用过程中的报错收集（持续更新） | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Pytorch bug | pytorch使用过程中的报错收集（持续更新）</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">November 5, 2020&nbsp;&nbsp;17:10:38</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="Tensor"><a href="#Tensor" class="headerlink" title="Tensor"></a>Tensor</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ValueError: only one element tensors can be converted to Python scalars</span><br></pre></td></tr></table></figure>
+<p>我在将一个list中包含有<code>dim&gt;=2</code>的tensor转化为LongTensor时报错如上，错误原因是只能将含有一个元素的tensor转化为python标量。修改方式为：将list中的tensor改为<code>np.array()</code>形式，就可以将这个list转化为Tensor了。</p>
+<hr>
+<h1 id="nn-Parallel"><a href="#nn-Parallel" class="headerlink" title="nn.Parallel"></a>nn.Parallel</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: Expected <span class="built_in">object</span> of device <span class="built_in">type</span> cuda but got device <span class="built_in">type</span> cpu <span class="keyword">for</span> argument <span class="comment">#1 &#x27;self&#x27; in call to _th_addmm</span></span><br></pre></td></tr></table></figure>
+<p>这里需要查看自己的tensor是否全部copy至gpu。</p>
+<hr>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: arguments are located on different GPUs at /pytorch/aten/src/THC/generic/THCTensorMathBlas.cu:<span class="number">270</span></span><br></pre></td></tr></table></figure>
+
+<p>这里还是需要检查自己的网络层定义是否规范。我在这个坑里爬了半天，建议大家一开始写网络层时还是多多参考主流代码书写习惯，我就是在网络层里乱传tensor，导致一开始的tensor由`DataParallel``分配至gpu，自定义函数里的tensor没有被分到和其他参与运算的tensor于同一块gpu。推一个该问题的详细解决方案：<a target="_blank" rel="noopener" href="https://www.freesion.com/article/9848480896/">传送门</a><br>规范的网络层定义格式：<br><img src="https://upload-images.jianshu.io/upload_images/14408999-620923a322cd536e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>再补充一点，由于<code>DataParallel</code>也是Pytorch的<code>nn.Mudule</code>，因此模型和优化器都需要使用<code>.module</code>来定义，自定义网络层要注意继承<code>nn.Module</code>，若不想按照规范格式定义的话也可以直接在变量后加<code>.module</code>。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: module must have its parameters and buffers on device cuda:0 (device_ids[0]) but found one of them on device: cuda:1</span><br></pre></td></tr></table></figure>
+<p>该错误定位在没有设定主GPU的ID。我在GPU使用过程中选择第3,4块，对应的<code>device_ids = [2,3]</code>，因此在调用dataParallel时申明：<br><code>device = toech.device(&quot;cuda:&#123;&#125;&quot;.format(&quot;2,3&quot;) if torch.cuda.is_available())</code><br><code>model = torch.nn.DataParallel(model, device_ids = [2,3])</code><br>注意在tensor定义时需使用<code>tensor.to(deivce)</code>，不能直接使用<code>.cuda()</code>，因为<code>.cuda()</code>会默认使用gpu0作为主GPU。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RuntimeError: expected condition, x and y to be on the same device, but condition is on cuda:2 and x and y are on cuda:1 and cuda:2 respectively</span><br></pre></td></tr></table></figure>
+<p>这个错误定位是由于我的tensor1是网络输入时送入的，其他tensor是在训练过程中通过计算得到或模型定义时初始化的，在dataParallel中，各个tensor被分配的gpu位置不同，从而导致这个错误。<br>处理方法是简单粗暴的在tensor后面加<code>.cuda()</code>。</p>
+<hr>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UserWarning: Was asked to gather along dimension 0, but all input tensors were scalars; will instead unsqueeze and return a vector.</span><br></pre></td></tr></table></figure>
+<p>说明一下：每张卡上的loss都是要汇总到第0张卡上求梯度，更新好以后把权重分发到其余卡。多卡的时候采用nn.DataParallel训练会出现这个warning，由于计算loss的时候是分别在多卡计算的，那么返回的也就是多个loss，你使用了多少个gpu，就会返回多少个loss。但如果使用gpu的数量为单数，这意味着每块gpu处理的batchsize不同，因此在求平均loss可以使用<code>size_average=False，reduce=True</code>作为参数。每个GPU上的损失将相加，但不除以GPU上的批大小。然后将所有平行损耗相加，除以整批的大小，那么不管几块GPU最终得到的平均loss都是一样的。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/04/27/hello-world/">Hello World</a>
+            
+            
+            <a class="next" rel="next" href="/2020/10/13/preprocess-networkx%E5%92%8Cplotly/">preprocess | networkx和plotly</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

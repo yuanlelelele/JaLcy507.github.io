@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>论文笔记 | 用于事件抽取与生成的预训练语言模型 | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">论文笔记 | 用于事件抽取与生成的预训练语言模型</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2020&nbsp;&nbsp;00:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><em>本文主要复述论文[“Exploring Pre-trained Language Models for Event Extraction and Generation”] 的内容，以便自我回顾，也希望可以给大噶带来帮助~</em></p>
+<h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>这篇文章研究事件抽取的角度是从有标签的训练数据描述的，以往的EE任务依赖于人工标注数据，而不充分的训练数据会影响模型的效果。文章采用了一个预训练语言模型来提取事件触发词，通过角色预测分离方法来处理角色抽取任务中的角色重叠问题，并利用Bert模型的Masked LM来自动生成标签数据。该模型在ACE05数据集上的表现，事件抽取任务上达到了81.1%的F1值，角色抽取任务上达到了58.9%的F1值。</p>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><h3 id="角色重叠问题"><a href="#角色重叠问题" class="headerlink" title="角色重叠问题"></a>角色重叠问题</h3><p>ACE05数据集上10%的事件有角色重叠问题，例句<code>The explosion killed the bomber and three shoppers</code>中<code>killed</code>触发事件$Attack$，元素<code>the bomber</code>既可以触发角色$Attacker$，又有角色$Victim$。之前的工作中会将该元素第一次被预测到的角色类型判定为分类好的角色标签，而没有考虑该角色在多个角色类型中的概率。</p>
+<h3 id="标签数据不足问题"><a href="#标签数据不足问题" class="headerlink" title="标签数据不足问题"></a>标签数据不足问题</h3><p>监督学习下的事件抽取依赖于大量人工标注的数据集，而ACE数据集当中给出的事件标签数量有限。为了解决这一问题，之前也有工作通过远程监督的方法来生成事件类型标签扩充训练集，但这一方法也是依赖于源数据集的数量与质量。</p>
+<h3 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h3><p>论文提出了预训练语言模型，利用从语料库中获得的知识来进行事件生成。预训练语言模型包括事件抽取模型与角色抽取模型，角色重叠问题通过计算角色类型与事件类型之间的关系，来重置角色分类的概率值。事件类型标签也是通过这个预训练语言模型实践，将原训练集作为样本，通过参数替换和辅助token重置这两步生成新的事件类型。</p>
+<h1 id="预训练语言模型"><a href="#预训练语言模型" class="headerlink" title="预训练语言模型"></a>预训练语言模型</h1><p>预训练语言模型（PLMEE）由触发词提取、角色提取两个阶段组成，二者的特征表示学习均在BERT模型上进行。整体模型框架由Figure3描述：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-b7d0e4bd7a5aa7b2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h3 id="触发词提取"><a href="#触发词提取" class="headerlink" title="触发词提取"></a>触发词提取</h3><p>事件抽取部分是直接用Bert模型得到词向量表示，最后加个分类器完成触发词的提取。值得说明的是，这里每个token的输入由三部分组成：<code>word embedding + segment + position</code>，整个模型基于句子级别，这里的<code>segments</code>设为0。其他设定则与Bert保持一致。</p>
+<h3 id="元素提取"><a href="#元素提取" class="headerlink" title="元素提取"></a>元素提取</h3><p>对于第一阶段提取到的触发词，这里会提取与其相关的成分的所有可能角色。作者总结的元素提取有三个难点：1.元素对触发词的依赖性；2.元素大多由长名词短语构成；3.角色重叠。模型框架设定与前一阶段相似，也是需要注意的一点：特征表示输入的<code>segment</code>将触发词所在的span设为1。<br>分类器则是设为所有角色标签的集合，即为对每个元素判断所有角色类型的概率，并在其分类器上设置一个二元组，用来判定该角色下的token的span，该跨度由<code>(start, end)</code>组成。通过对每种可能的角色标签进行计算，改善角色重叠问题。</p>
+<h3 id="角色span的判定"><a href="#角色span的判定" class="headerlink" title="角色span的判定"></a>角色span的判定</h3><p>判定角色的span，也就是如何更准确得到每个token的<code>(start, end)</code>域值。首先，对于每一个token$t$，经softmax分别计算在角色$r$下的起始点的概率$P^rs(t)$与结束点的概率$P^re(t)$：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-4c91345c5c2d9279.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-365b6399b9bb39d6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>$B()$是经Bert得到的词表示，W则为各自的权重。依据两个$P$得到每个token的起止状态，构成由二进制组成的序列$B^r$。经过算法1计算出所有的span。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-6a59c2f09790a8f9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h5 id="损失权重重置"><a href="#损失权重重置" class="headerlink" title="损失权重重置"></a>损失权重重置</h5><p>论文中处理一个元素有多种角色时应该被分类的角色标签，依据了同一事件中每种角色出现的可能性会大不相同这一事实。因此文中给出了当前角色在一个事件中的重要性判定条件：RF-IEF（这一定义与词频的TF-IDF类似），。由这一指标可以得到角色$r$在事件类型$v$中的重要程度$I(r, v)$：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-74ad5d028f47a58c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>作者也对这一论点进行了验证，由table1可知每种事件类型对应的角色标签数量只有少数。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-163e0f5af134112b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>将这一重要性程度的指标加入损失函数的计算当中，可以起到损失权重重置的作用，提高角色提取的准确率。</p>
+<h4 id="生成标签数据"><a href="#生成标签数据" class="headerlink" title="生成标签数据"></a>生成标签数据</h4><p>生成新的标签是将原有数据集作为样本，通过模型学习到新的之前没有标签的词并加入到训练集中，以起到扩充语料的作用。这里是采用了Bert的Mask预训练方法，通过两个步骤：1.句中的元素替换为有相同角色标签的其他元素；2.利用Bert的fine-tune替换触发词的辅助token。这里需要注意的几点：</p>
+<ol>
+<li>辅助token是原有样本数据集里未被识别成触发词或角色的token，除了词、数字，还可以包括标点。</li>
+<li>元素替换是将具有相同角色标签的元素进行代换。因此需要预先统计所有的实体以及对应标签构成<code>&#123;arg : role&#125;</code>字典集，并且这个字典集不包括有角色重叠的元素。</li>
+<li>这里的数据集扩充并非给没有标签的数据加上标签，而是保持触发词与角色的个数不变，通过辅助元素的替换将触发词与角色所在句子的成分做更改，获得同样有标签的句子，以达到数据集的扩充。</li>
+</ol>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-1b4632a29eae0899.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>该图示范了对一个句子输入所进行的替换。</p>
+<ul>
+<li>元素替换<br>进行替换的元素需要有相同的角色标签，为了保证被替换掉的数据可以呈现相似的语义，也就是语义相似、上下文语境相似，这里使用余弦相似度来衡量两个元素之前的相似度，用ELMo模型得到元素的向量表示，并统计概率值，以分数最高的作为替换元素。</li>
+<li>辅助token重写<br>在已有元素替换的基础上，作者认为再添加一项辅助token的替换可以改善参数替换带来的过拟合问题，以调整表示的平滑度与多样性。辅助token的替换由fine-tune实现，先是以一定比例将辅助token设定为<code>[mask]</code>，再经过模型依据上下文来生成更符合当前语境的token以作替换。作者的实验中是将所有的辅助token都进行了替换。</li>
+<li>评测<br>为了保证生成的句子可以对角色抽取产生积极的作用，作者使用了两个值来对句子生成进行评估：</li>
+</ul>
+<ol>
+<li>PPL：评估生成的合理性。</li>
+<li>DIS：评估生成语料与原有数据集之间的距离。</li>
+</ol>
+<p>（具体计算过程就不说明了，需要的可以参考论文~）</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>PLMEE模型的结果：<br><img src="https://upload-images.jianshu.io/upload_images/14408999-914fb05ee87ca424.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<hr>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>这篇论文比较有趣的一点是他统计了所有角色与事件类型之间的关系RF-IEF，虽然相较于以前的工作，这里会需要把多种不同标签都给计算一遍，但通过人为处理也是一个不错的选择。我认为理解这篇文章的难度在于需要掌握Bert的原理，由于我之前也没好好研究过这个，所以看起来也特别费劲，事实证明Bert是真的很优秀，这里的触发词识别与分类模块就将F1值提高了10个百分点。句子生成这块我觉得也是和Bert的Masked预训练原理结合的很巧妙，大多与Bert有关的我就没有描述了，这里贴一个<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4cb1f255cd7c">Bert模型讲解</a>，可以迅速上手~</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/PaperReading/"># PaperReading</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-%E2%96%B3-%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E6%A3%80%E6%B5%8B%E7%9A%84%E5%B7%AE%E5%BC%82%E5%8C%96%E4%B8%8E%E6%B3%9B%E5%8C%96%E7%9F%A5%E8%AF%86%E6%8F%90%E5%8F%96/">论文笔记 | △-表示学习实现事件检测的差异化与泛化知识提取</a>
+            
+            
+            <a class="next" rel="next" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AE%80%E8%AE%B0-%E5%BC%80%E6%94%BE%E5%9F%9F%E4%BA%8B%E4%BB%B6%E6%8A%BD%E5%8F%96%E7%BB%BC%E8%BF%B0/">论文简记 | 开放域事件抽取综述</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

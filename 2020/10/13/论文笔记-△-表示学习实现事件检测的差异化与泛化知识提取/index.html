@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>论文笔记 | △-表示学习实现事件检测的差异化与泛化知识提取 | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">论文笔记 | △-表示学习实现事件检测的差异化与泛化知识提取</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2020&nbsp;&nbsp;00:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><em>本文主要复述论文[“Distilling Discrimination and Generalization Knowledge for Event Detection via ∆-Representation Learning”] 的内容，以便自我回顾，也希望可以给大噶带来帮助~</em><br><a target="_blank" rel="noopener" href="https://www.aclweb.org/anthology/P19-1429.pdf">论文链接</a></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>事件检测模型需要具差异化的信息来区分二义性触发词，以及用泛化知识来识别隐藏事件触发词。以往的事件检测模型大多关注于具差异性的信息识别，本论文作者提出了一个△-特征表示学习方法通过解耦来同时提取差异化信息与泛化信息，并将二者融合得到事件特征表示。实验在ACE05和KBP2019数据集上进行，结果证明方法可以更好的识别稀疏触发词汇。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><ul>
+<li>out-of-vocabulary（OOV）:未登录词。指训练时未出现，测试时出现了的词，也就是这些词汇在当前的词汇表里无法找到。</li>
+<li>out-of-labels（OOL）：指(word, event type)未出现在训练集当中，但这个词在训练集中却有出现。</li>
+<li>Discrimination knowledge：识别触发词在不同语境下所触发的事件类型；</li>
+<li>Generalization knowledge：主要来识别OOV、OOL以及稀疏性触发词。<br>这篇论文的任务介绍可以参考Figure1，例如S1中的<code>（fire，EndPosition）</code>与S2中的<code>（fire，Attack）</code>都是属于densely触发词，训练过程中可以通过上下问的词汇信息来提取S4中触发词的事件类型。而S5中的触发词<code>hack</code>属于未在训练集中学习到的触发词，这时候就需要提取S3中<code>shot to death</code>这样的结构化信息来学习<code>hack to death</code>可以触发事件<code>Attack</code>。<br><img src="https://upload-images.jianshu.io/upload_images/14408999-2bb0023c8d6e6dd0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></li>
+</ul>
+<h2 id="△-特征表示学习"><a href="#△-特征表示学习" class="headerlink" title="△-特征表示学习"></a>△-特征表示学习</h2><p>论文中提出的这个表示学习方法是由三部分组成：$r^{ed}=r^w⊕r^d⊕r^g$，其中$r^d$是基于词法信息的词表示，$r^g$是词法无关的词表示，$r^w$是预训练时候得到的词表示，但是这个$r^w$是动态的，会在模型训练过程中不断得到更新。需要说明的是，作者对词的预训练是基于ELMo模型来做的（当然也有与其他预训练方法进行对比）。<br>整体模型的框架可由Figure2来表述：<br><img src="https://upload-images.jianshu.io/upload_images/14408999-20fef22ef0816607.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>基于词法信息的词表示与词法无关的词表示始终是相辅相成的，但细节来讲，基于词法信息的词表示学习能够提取密集式的触发词，而词法无关的词表示学习能够更好的提取稀疏式触发词，通过△-特征表示方法将事件表示解耦成三个部分，然后再将其融合得到最终的事件触发词特征表示通过softmax得到概率值，进行事件类型分类。</p>
+<h4 id="lexical-specific-Feature"><a href="#lexical-specific-Feature" class="headerlink" title="lexical-specific Feature"></a>lexical-specific Feature</h4><p>这部分的特征表示采用attention-RNN进行学习，lexical-specific对应差异化信息，能够有效提取触发词在其对应语境下的特征信息。<br>在模型中通过训练来增强这类触发词的lexical-specific信息表示，也就是希望$r^d$在最终词表示里所占权重大一些，作者提出的是lexical-enhanced ∆-learning表示学习。该方法可参考下图：<br><img src="https://upload-images.jianshu.io/upload_images/14408999-dce2caa925693593.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Figure 3(a)"></p>
+<p>其实这里的<code>+Lexi</code>相当于一个正反馈，假设当前的输入，将触发词与其上下文表示为<code>(t=triger, c=context, w=word)</code>，输出分为两部分：事件类型分类器与词法二进制分类器，其中事件分类器传递事件类型标签的信息，词法二进制用来判定当前词是不是一个可由词法表示增强学习的词，即当<code>t = w</code>则生成标签<code>(y, 1)</code>，反向传播继续学习，反之则传递标签<code>(y, 0)</code>。这里的loss为<code>event classifier</code>与<code>lexical classifier</code>二者之和，以确保$r^d$既存储词法相关的信息又保留事件信息。</p>
+<h4 id="lexical-free-Feature"><a href="#lexical-free-Feature" class="headerlink" title="lexical-free Feature"></a>lexical-free Feature</h4><p>lexical-free对应上文说明的泛化信息，作者采用的是DMCNN模型来学习这种类型的特征表示。与词法相关的表示相反，作者希望在这类触发词的词表示当中，词法表示占比小点，而词法无关的结构法信息来提供更多的特征信息，由此提出了lexical-adversarial ∆-learning方法。描述如下图：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-21ec3685c5ae1ff4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Figure 3(b)"></p>
+<p>整个模型的结构与lexical-specific相似，也是在输出部分构造两个分类器，不同点是这部分要求<code>-Lexi</code>，也就是说对于<code>(t, c, w)</code>，若输出标签<code>(y, 1)</code>，说明这部分的模型依旧能够学习到当前输入的词法相关信息，那么模型就会通过<code>-Lexi</code>操作来刨去这部分特征信息，使得下次遇到相同表示时，不会再学到词法相关的信息。<br>其实这里是用的对抗网络原理，作者用$Θ_{DeLexi}$来表示词法相关表示的参数，用$Θ_g$生成$r^g$向量表示以混淆$Θ_{DeLexi}$，通过最小最大化方法在$Θ_g$最大的情况下减弱$Θ_{DeLexi}$对特征表示的影响。<br>同样的，最终的loss为event classifier与lexical classifier二者之和。</p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>该模型在ACE05数据集上的结果：<br><img src="https://upload-images.jianshu.io/upload_images/14408999-95e7ad53c2027eee.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>该模型在TAC KBP2017数据集上的结果：<br><img src="https://upload-images.jianshu.io/upload_images/14408999-c6c7c85c10952a6a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a>写在最后</h2><p>个人认为这篇论文的亮点是这个利用对抗网络来生成词法无关的特征表示。作者对数据集真的太了解了，很多时候我们在考虑触发词的特征表示学习时只是正向思考，一味的捕获上下文提供给触发词的信息。虽然CNN本身可以获取局部结构化的特征信息，但利用对抗网络将这部分结构化信息当中掺杂的上下文相关特征信息给刨去，也就是作者论文题目当中的“蒸馏法”，使得结构式的特征信息更为明显，这样一些触发词我们在训练当中并未碰到，也不会因为网络没有学习到他而把他识别为负例标签。（秒~ 向作者学习！</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/PaperReading/"># PaperReading</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-%E7%94%A8%E4%BA%8E%E4%B8%AD%E6%96%87%E4%BA%8B%E4%BB%B6%E6%A3%80%E6%B5%8B%E7%9A%84NPN%E6%A8%A1%E5%9E%8B/">论文笔记 | 用于中文事件检测的NPN模型</a>
+            
+            
+            <a class="next" rel="next" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-%E7%94%A8%E4%BA%8E%E4%BA%8B%E4%BB%B6%E6%8A%BD%E5%8F%96%E4%B8%8E%E7%94%9F%E6%88%90%E7%9A%84%E9%A2%84%E8%AE%AD%E7%BB%83%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">论文笔记 | 用于事件抽取与生成的预训练语言模型</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

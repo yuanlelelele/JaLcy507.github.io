@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>论文笔记 | 用于中文事件检测的NPN模型 | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">论文笔记 | 用于中文事件检测的NPN模型</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2020&nbsp;&nbsp;00:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><em>本文主要复述论文[“Nugget Proposa Networks for Chinese Event Detection”] 的主要内容，以便自我回顾，也希望可以给大噶带来帮助~</em></p>
+<h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>对于中文文本来说，由于没有单词分隔符而带来的单词与事件触发器之间不匹配问题，给事件检测的任务带来了很多的挑战。本篇论文提出了Nugget Proposal Networks（NPNs），它可以通过直接提出以每个字符为中心的整个触发器块来解决字触发器不匹配问题，而不用考虑字边界。具体而言，NPN在字符范式中执行事件检测时，首先学习每个字符的混合表示以便从字符和单词中捕获结构和语义信息。 然后基于学习的表示，通过利用中文事件触发器的字符组成结构来提出触发器块并对其进行分类。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>因为许多触发器与字不完全匹配，具体而言，触发器可以是单词的一部分或跨多个单词，此时逐字事件检测模型无法有效作用。table1描述了不同语料库下触发器与词汇的匹配程度。Figure1介绍了触发器块需要的匹配模式。<br><img src="https://upload-images.jianshu.io/upload_images/14408999-e891a9cc6c776b96.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-2b5df69cea971137.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>给定一个句子，NPNs模型可以将字符视为基本检测单元，并且能1)通过利用触发器的内部组成结构直接提出每个字符的整个潜在触发器块; 2)通过学习字符和词汇的语义表示，有效地对提出的触发器进行分类。比如对figure1(b)中的字符“伤”，NPNs模型不仅可以获得这个字符是injure触发器的一部分，还可以指明“受了伤”是完整的触发器。<br>Figure2展示了NPNs的结构。给定句子中的角色，NPN可可以有效解决词触发器的不匹配问题和词的二义性问题。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-daf00d2708b80700.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h2 id="混合表示"><a href="#混合表示" class="headerlink" title="混合表示"></a>混合表示</h2><p>混合表示可以有效地捕获内部字符组成和准确事件分类的信息。从字符层面的信息来看，“枪杀”是由常规模式“方式+动词”构成的触发器，而在词汇层面上可以由字符的上下文获取更为明确的信息，比如“杀青”。因此，NPN模型先采用token-level神经网络学习两组character-level和word-level的表示，之后由三种不同的混合范式得到混合表示。<br><strong>令牌级表示学习</strong><br>Token-level的神经网络可以分别从字符级和词汇级提取特征向量。Figure3展示了词汇级的特征向量训练模型框架。整个结构采用了Dynamic multi-pooling CNN网络，一个窗口大小h的卷积层计算式为(1)，其中Wi是卷积核。以动态最大池化来保证每个句子的重要信息(2)。联合所有的特征信息得到characer-level和word-level的特征向量表示。<img src="https://upload-images.jianshu.io/upload_images/14408999-1f473b97ed5b65f9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br><img src="https://upload-images.jianshu.io/upload_images/14408999-fe91b5b54d6ae4d4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br><img src="https://upload-images.jianshu.io/upload_images/14408999-4130df94eecd2ae8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>混合表示学习</strong><br>得到特征向量f^char^与f^word^之后，先使用两个密集层将f^char^与f^word^分别投影到相同的向量空间，维度为d’对应的向量也分别为f’^char^与f’^word^。<br>作者设计了三种范式来得到混合表示：<em>Concat Hybrid</em>(3)；<em>General Hybrid</em>(4)和(5)，此处的ZG即类似GRUs里的门结构，是d’维的权重向量，用以表示信息流的特征重要程度。Wgh和Ugh为权重矩阵。<br><img src="https://upload-images.jianshu.io/upload_images/14408999-af89a8cb89ed4289.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br><img src="https://upload-images.jianshu.io/upload_images/14408999-48455a069089e613.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>特定任务混合表示</strong><br>针对触发器块和事件类型分类分别提供门函数(6)和(7)，可以得到更为明确的特征混合表示fN(8)和fT(9)。<br><img src="https://upload-images.jianshu.io/upload_images/14408999-c2c6e04c525af547.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h2 id="触发器块识别网络"><a href="#触发器块识别网络" class="headerlink" title="触发器块识别网络"></a>触发器块识别网络</h2><p>以figure5为例，NPNs不仅可以标记出字符”伤”，而且能识别”受了伤”作为需要的触发器块，并分类事件类型为Injure。因此，NPNs可以划分为两个模块。<br><img src="https://upload-images.jianshu.io/upload_images/14408999-f6c2a4013da20ec5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>触发器块生成</strong><br>基于触发器块的网络不仅可以判断一个char是否属于一个触发块，还可以指出整个触发器块。figure5表明了触发器块的生成过程，以式(10)来计算每个候选块的概率，其中OG∈RdN，dN是候选块的数量加上一个“NIL”标签，NIL表明该字符不属于触发器。对于一个限定长度为L的触发块长度，(L^2^+L)/2估算其候选块的数量。此处，作者依据语料库判定L长度不超过3。候选触发器块成立的概率依据于现有的文本组成格式，比如“verb + auxiliary + noun”、“manner + verb”等。得到每个候选块的分数后，用sofrmax模型(11)对数据做标准化处理。<br><img src="https://upload-images.jianshu.io/upload_images/14408999-be5fae2a1bbe1175.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br><img src="https://upload-images.jianshu.io/upload_images/14408999-6a72ec89f74335bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>事件类型分类</strong><br>得到一个char的触发块后，将之前学到的参数发T投入分类器中来判断当前触发器块的具体类型(12)。得到OC∈RtT，dT是事件子类型的数量。同样的，使用softmax对结果进行标准化(13),其中Oi^C^是O^C^中的第i个元素，表示第i个子类型的分数。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-0d42dff8941003ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-7b031e3e75b208fc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>论文中采用的冗余预测策略，即将所有检测到的触发块添加到结果中并忽略NIL类型。这种策略提高了NPN模型的错误容忍度。</p>
+<p><strong>模型训练</strong></p>
+<p>实验中将触发器块中包含的所有字符视为正训练实例，将不在任何触发器中的字符随机取样为负实例，并将它们标记为“NIL”。 假设我们在S^G^ = {(xk，yG k) | k = 1,2，… T^G^}中有T^G^训练样例来训练触发器块生成器，以及S^C^ = {(xk，yk^C^)| k = 1,2，… TC}中的T^C^样例训练事件类型分类器，因此定义损失函数L（θ）为(14)，其中的θ为模型的超参，采用随机梯度下降获得参数。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>论文中选择了ACE2005和KBPEval2017两个语料库训练模型，实验结果对比展示为table2。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-f45e721cefceefc4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>该篇论文提出的方法主要是由特定事件类型与候选触发器不匹配这一问题展开的，尤其是中文语料库，没有分词符导致这一现象更加的严重。实验中将KBP语料库分为了三个部分：完全匹配，部分匹配和交叉匹配，统计了在不同模型下的触发器匹配结果(table4)。结果表明NPN模型在这一问题上有良好的成效。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-f75b4f7078162aac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>作者还提供了该篇论文的开源码：<a target="_blank" rel="noopener" href="https://github.com/sanmusunrise/NPNs">https://github.com/sanmusunrise/NPNs</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/PaperReading/"># PaperReading</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/10/13/ACE2005%E8%AF%AD%E6%96%99%E5%BA%93%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F%E5%8F%8A%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/">ACE2005语料库文件格式及内容解析</a>
+            
+            
+            <a class="next" rel="next" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-%E2%96%B3-%E8%A1%A8%E7%A4%BA%E5%AD%A6%E4%B9%A0%E5%AE%9E%E7%8E%B0%E4%BA%8B%E4%BB%B6%E6%A3%80%E6%B5%8B%E7%9A%84%E5%B7%AE%E5%BC%82%E5%8C%96%E4%B8%8E%E6%B3%9B%E5%8C%96%E7%9F%A5%E8%AF%86%E6%8F%90%E5%8F%96/">论文笔记 | △-表示学习实现事件检测的差异化与泛化知识提取</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

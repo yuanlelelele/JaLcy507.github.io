@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>ACE2005语料库文件格式及内容解析 | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">ACE2005语料库文件格式及内容解析</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2020&nbsp;&nbsp;00:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>ACE2005语料库是语言数据联盟(LDC)发布的由实体，关系和事件注释组成的各种类型的数据，包括英语，阿拉伯语和中文培训数据，目标是开发自动内容提取技术，支持以文本形式自动处理人类语言。<br>ACE语料解决了五个子任务的识别：entities、values、temporal expressions、relations and events。这些任务要求系统处理文档中的语言数据，然后为每个文档输出有关其中提到或讨论的实体，值，时间表达式，关系和事件的信息。<br>ACE语料库的获取链接：<a target="_blank" rel="noopener" href="https://catalog.ldc.upenn.edu/LDC2006T06">语料库传送门</a><br>有关ACE英文语料库注释准则的详细内容可参考：<a target="_blank" rel="noopener" href="https://www.ldc.upenn.edu/sites/www.ldc.upenn.edu/files/english-events-guidelines-v5.4.3.pdf">注释准则</a><br>（该路径的上一目录下也可查看到其他语言的注释规则解释。</p>
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>ACE2005语料文件夹下的data分别包括了英语，阿拉伯语和中文三种语言，每种语言下有多个数据源。该语料库的训练集和测试集的详细统计数据如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-41934a59273119af.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-c9c9ebc6c8335e11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>所有的训练数据文件由两个独立的注释器完成双重注释。第一遍完整注释产生1p，双重第一遍完整注释产生dual。单个注释器完成文件的所有任务（实体，值，关系和事件）。之后，由注释人裁定每个文件的1p和dual版本之间的差异，产生高质量的黄金标准文件，称为adj。判定后，以TIMEX2值进行标准化(在此只针对英语语料)，称为TIMEX2NORM。该流程可描述为如下：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-f79f564923d1f0c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>以英语版本为例，目录下对应的文件名称分别为bc，bn，cts，nw，un，wl。这些数据源继而被分类成adj，fp1(即第一遍注释的1p)，fp2(即dual)，timex2norm。英语数据源的注释状态：</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-48cfa19a8a9f60a7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><p>ACE注释任务对应于三个研究目标：实体检测和跟踪（EDT），关系检测和表征（RDC）以及事件检测和表征（EDC）。第四个注释任务，实体链接（LNK），将对单个实体及其所有属性的所有引用分组到一个复合实体中。<br>**实体检测和跟踪(EDT)**： 是核心注释任务，为所有剩余任务提供基础。后来的ACE任务确定了七种类型的实体：人员，组织，位置，设施，武器，车辆和地缘政治实体（GPE）。每种类型进一步分为子类型（例如，组织子类型包括政府，商业，教育，非营利，其他）。注释器标记了文档中每个实体的所有提及，无论是命名，名义还是代名词。对于每一次提及，注释器都识别出代表实体的字符串的最大范围，并标记每个提及的头部。嵌套提及也被捕获。每个实体根据其类型和子类型进行分类，并根据其特定类别，通用，属性，负面量化或未指定类别进一步标记。在LNK注释任务期间，注释器审查整个文档，以便将同一实体的提及分组在一起; 他们还标记了转喻的案例，其中一个实体的名称用于指代与其相关的另一个实体。<br>**关系检测和表征(RDC)**： 涉及实体之间关系的识别。此任务已添加到ACE的第2阶段。RDC针对物理关系，包括位置，近处和部分整体; 社会/个人关系，包括商业，家庭和其他; 一系列的就业或会员关系; 工件与代理商之间的关系（包括所有权）; 从属关系，如种族; 人与GPE之间的关系，如公民身份; 最后是话语关系。对于每个关系，注释器都识别出两个主要参数（即，链接的两个ACE实体）以及关系的时间属性。由明确的文本证据支持的关系与那些依赖于读者的语境推理的关系不同。<br>ACE阶段3增加了一项新的挑战： **事件检测和表征(EDC)**。在EDC中，注释器识别并描述了EDT实体参与的五种类型的事件。目标类型包括交互，移动，转移，创建和销毁事件。注释器为每个事件标记文本提及或锚点，并按类型和子类型对其进行分类。他们根据特定类型的模板进一步确定了事件参数（代理，对象，源和目标）和属性（时间，位置以及其他类似工具或目的）。</p>
+<h2 id="ACE05文件格式描述"><a href="#ACE05文件格式描述" class="headerlink" title="ACE05文件格式描述"></a>ACE05文件格式描述</h2><p>每个注释文件对应四个版本：<br>1.原文本文件(.sgm)：所有源文件(包括中文文件)都以UTF-8编码；<br>2.ACE程序格式(APF)文件(.apf.xml)：采用官方ACE注释文件格式；<br>3.AG  文件(.ag.xml)：使用LDC注释工具包创建的注释文件；<br>4.TABLE文件(.tab)：存储以ID识别的ag.xm文件及其对应的apf.xml文件之间映射表。</p>
+<h2 id="ACE任务介绍"><a href="#ACE任务介绍" class="headerlink" title="ACE任务介绍"></a>ACE任务介绍</h2><p><strong>实体检测与识别</strong><br>实体提及的每个文档都需要实体输出。此输出包括实体的属性和提及的信息。实体属性当前仅限于实体类型，实体子类型，实体类以及用于引用实体的名称。每个实体提及的输出包括提及类型，其头部的位置和范围，以及可选的提及角色和提及风格(文字或转喻，该属性以apf文件格式编码为名为“metonymy_mention”，为true表示“转喻风格”的引用，false表示“文字”引用，默认为文字)，table1与table2列出了ACE实体类型，子类型和类。table3列出了提及类型。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-c63635d7e6ede1e4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><img src="https://upload-images.jianshu.io/upload_images/14408999-2632f48dab9014ff.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><img src="https://upload-images.jianshu.io/upload_images/14408999-88f5ad6f161fa4ac.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>注释指南中提到，在评估期间仅向特定(SPC)实体分配非零值，即系统仅需输出SPC实体。</p>
+<p><strong>值检测与识别</strong><br>ACE值检测和识别任务（VAL）要求检测源语言数据中提到的某些指定类型的值，并且识别关于这些值的所选信息并将其合并为每个检测值的统一表示。 ACE值是一个提供附加信息的数量，也可以作为实体使用，作为事件的参数。 值与实体类似地表示，并以其属性和提及为特征。 表4中列出了2005的每个ACE值的类型和子类型属性。可查看注释准则，有值类型和子类型的详细描述。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-fc38fbe3231d24cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>时间检测与识别</strong><br>ACE时间表达识别和规范化任务（TERN）根据“TIDES 2005标准的时间表达注释”来检测和识别源语言数据中提到的某些时间表达式（以时间x2格式）。要识别的时间表达包括绝对表达式和相对表达式。 此外，还要识别持续时间，事件锚定表达式和时间集。 此信息包含在timex2属性集中。 表5列出了2005年要评估的ACE timex2属性。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-422f3767abb57331.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>关系检测与识别</strong><br>ACE关系检测和识别任务（RDR）要求检测源语言数据中提到的某些指定类型的关系，并且识别关于这些关系的所选信息并将其合并为每个检测到的关系的统一表示。<br>关系提及的输出包括有关关系属性，关系参数和关系提及的信息。 关系属性是关系类型，子类型，模态和时态。关系参数由唯一ID和角色标识。相关的两个实体的角色是“Arg-1”和“Arg-2”，除了对称关系（表6中标识）之外，将这些角色正确分配给它们各自的参数是很重要的。可能只有一个Arg-1实体和一个Arg-2实体。除了两个主要实体参数之外，还可能存在一个或多个temporal（timex2）参数，并且在关系中包含这些参数以便为关系接收完整值。关系提及是表达关系的句子或短语，必须包含两个相关实体的提及。<br>表6中列出了2005年的ACE关系类型和子类型。关系可能只有一种类型和一种子类型。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-37af02cd7eb017e5.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>事件检测与识别</strong><br>ACE事件检测和识别任务（VDR）要求检测源语言数据中提到的某些指定类型的事件，并且识别关于这些事件的所选信息并将其合并为每个检测到的事件的统一表示。<br>提及事件的每个文档都需要事件输出。此输出包括有关事件属性，事件参数和事件提及的信息。事件属性是事件类型，子类型，模态，极性，通用性和时态。table7中列出了2005年的ACE事件类型和子类型。事件可能只有一种类型和一种子类型。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-a34b40a28ec4bc29.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>每个事件参数由唯一ID和角色标识。与仅允许Arg-1和Arg-2角色中的一个参数的关系不同，事件允许同一角色中的多个参数。<br>事件提及是提及事件的句子或短语，事件提及的范围被定义为提及事件的整个句子。虽然未评估事件提及的识别，但它是允许系统输出事件映射到参考事件的方式之一。因此，正确识别事件提及可能有助于评估。</p>
+<h2 id="ACE05文件版本介绍"><a href="#ACE05文件版本介绍" class="headerlink" title="ACE05文件版本介绍"></a>ACE05文件版本介绍</h2><p>**源文本文件(.sgm)**：所有源文件（包括中文文件）都以UTF-8编码。 这些文件使用UNIX样式的行尾。 仅评估开始文本标记<TEXT>和结束文本标记&lt;/ TEXT&gt;之间的文本。 此规则的一个例外是，一个TIMEX2注释放在<DATETIME>和&lt;/ DATETIME&gt;标记之间，即使它们出现在TEXT标记之外。</p>
+<p>**APF文件(.apf.xml)**：ACE Pilot格式是XML对齐注释的一种形式。有关ACE程序格式的定义链接已失效，若需查找更多相关内容可查看：<a target="_blank" rel="noopener" href="http://xml.coverpages.org/acePilot.html%E3%80%82">http://xml.coverpages.org/acePilot.html。</a></p>
+<p>**AG文件(.ag.xml)**：LDC注释图格式。 LDC的ACE内部注释文件格式。 可以使用LDC的注释工具查看这些文件。</p>
+<p>**TABLE文件(.tab)**：同上。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/10/13/preprocess-networkx%E5%92%8Cplotly/">preprocess | networkx和plotly</a>
+            
+            
+            <a class="next" rel="next" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-%E7%94%A8%E4%BA%8E%E4%B8%AD%E6%96%87%E4%BA%8B%E4%BB%B6%E6%A3%80%E6%B5%8B%E7%9A%84NPN%E6%A8%A1%E5%9E%8B/">论文笔记 | 用于中文事件检测的NPN模型</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>论文简记 | 开放域事件抽取综述 | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">论文简记 | 开放域事件抽取综述</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">October 13, 2020&nbsp;&nbsp;00:00:00</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><em>来源：A Survey of Open Domain Event Extraction</em></p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>开放域事件抽取概述：目前在EE领域研究较深的工作都是基于预定义的事件类型，常见数据集有ACE2005和TAC KBP2017，基于这些数据集训练得到的模型在海量文本中的覆盖率很低，无法推广到现实场景中。相比于预定义的EE有各自明确的领域以及事件定义标准，开放域EE没有固定明确的场景，所用文本来自于类似社交媒体等大量嘈杂的语料库。导致开放域的EE缺少现有的参考文本以及大量复杂的基础事件类型和架构，但除去这些限制，也使得开放域EE更加有研究前景。<br>下文将从数据、模型、评价指标这几个方面介绍。</p>
+<h2 id="数据"><a href="#数据" class="headerlink" title="数据"></a>数据</h2><p>由监督学习训练得到的开放域事件抽取模型很难识别到大范围的事件类型，且监督学习所使用的人工标注数据成本较高。为了利用现有的未标记文本数据，有研究提出利用知识库自动生成标记数据的方法。survey讨论了两种生成标签数据的方法：通过识别key argument和key trigger来生成数据；二是仅通过识别key argument生成数据。</p>
+<h4 id="知识库源"><a href="#知识库源" class="headerlink" title="知识库源"></a>知识库源</h4><p><strong>FreeBase</strong><br>一种语义知识库，它使用复合值类型（CVT）将多个值组合为一个值。一条CVT就可以认为是一个事件，其类型定义为该事件的类型，一条CVT下有若干条instance，每个instanc下的值作为事件的argument。例如下图中的<code>sold</code>为<code>business.acquisition</code>的一个实例，图3为<code>sold</code>作为事件<code>business.acquisition</code>参数对应的值。</p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-c08e2ef97b62cd17.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><img src="https://upload-images.jianshu.io/upload_images/14408999-61cc32c165b1fd8e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p><strong>FrameNet</strong><br>也是一种语义知识库，存储有关词汇和谓词语义信息。FrameNet里大范围标注了许多个frame，每个frame下又有对应的词元。一个frame即可认为一种事件类型，frame下的词元可以认为当前事件的触发词。例如句子:<br><code>Michelle baked her mother a cake for her birthday.</code><br>其中<code>bake.v</code>  是<code>Cooking_creation </code>类型的一个词元，即在句中<code>bake</code>可以被标记为触发词来触发事件类型<code>Cooking_creation </code>。<br><em>FrameNet资源获取途径：<a target="_blank" rel="noopener" href="https://framenet.icsi.berkeley.edu/">传送门</a></em></p>
+<p><strong>Wikipedia</strong><br>维基百科数据可以作为一个半结构化，覆盖大范围的知识库，对实体链接、命名实体识别都有很大效用。survey认为，在事件抽取中，可以将相同含义的实体提及链接到特定的实体，提高开放域EE模型效果。</p>
+<h4 id="数据生成途径"><a href="#数据生成途径" class="headerlink" title="数据生成途径"></a>数据生成途径</h4><p>直接使用远程监督的方法，在知识库的辅助下生成数据有两方面的问题：一是现存知识库未明确给出触发词，二是事件实例对应的参数及其角色不仅出现在单一句子中。survey介绍了利用FreeBase和FrameNet来生成数据的方法，其中有两种途径。<br>下列是第一种途径<strong>识别触发词+关键参数：</strong></p>
+<ol>
+<li>选择key arguments。</li>
+<li>使用key arguments来标注事件以及触发词。</li>
+<li>借助语言知识库（FrameNet）来过滤噪声并扩充更多的触发词。</li>
+<li>使用soft DS自动标注训练集。</li>
+</ol>
+<p><em>参考论文：Automatically labeled data generation for large scale event extraction</em></p>
+<p>第二种途径是<strong>仅识别关键参数</strong>：</p>
+<ol>
+<li>从CVT条目中识别key argument。</li>
+<li>基于现存结构化知识库生层标签数据。</li>
+</ol>
+<p><em>参考论文：Scale Up Event Extraction Learning via Automatic Training Data Generation</em></p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p>survey中调研的文章来源于关系抽取与零样本学习。</p>
+<p><em>参考文献：<br>Zero-shot relation extraction via reading comprehension.<br>Zero-Shot Transfer Learning for Event Extraction.</em></p>
+<h2 id="评估"><a href="#评估" class="headerlink" title="评估"></a>评估</h2><p>（待补充…）</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/PaperReading/"># PaperReading</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/10/13/%E8%AE%BA%E6%96%87%E7%AC%94%E8%AE%B0-%E7%94%A8%E4%BA%8E%E4%BA%8B%E4%BB%B6%E6%8A%BD%E5%8F%96%E4%B8%8E%E7%94%9F%E6%88%90%E7%9A%84%E9%A2%84%E8%AE%AD%E7%BB%83%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/">论文笔记 | 用于事件抽取与生成的预训练语言模型</a>
+            
+            
+            <a class="next" rel="next" href="/2020/09/21/%E5%B0%8F%E8%A2%81%E5%90%8C%E5%AD%A6%E7%9A%84%E4%B8%93%E6%B3%A8%E5%8A%9B%E5%9F%B9%E5%85%BB%E8%AE%A1%E5%88%92/">小袁同学的专注力培养计划</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
