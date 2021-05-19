@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="JaLcy">
+
+
+
+
+
+<title>远程监督下带来的噪声问题 | JaLcy</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">JaLcy&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">JaLcy&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">远程监督下带来的噪声问题</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">JaLcy</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">May 19, 2021&nbsp;&nbsp;16:02:29</a>
+                        </span>
+                    
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="远程监督下带来的噪声问题"><a href="#远程监督下带来的噪声问题" class="headerlink" title="远程监督下带来的噪声问题"></a>远程监督下带来的噪声问题</h1><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>先说一下，我本人是做事件抽取的，然鹅研二这一年主要专注于依赖知识库的触发词检测，抛开了一些网络“再改造”方式，一直在琢磨开放领域下的远程监督给到的标注数据，怎么能够训练出具有特定场景需求的事件检测模型。一段时间后有了一些结果，但对这个远程监督却越来越困惑。我用远程监督标注得到的数据是一词对应多个标签，假设当前语境中有且仅有一个标签为真，那么我的训练主要围绕这个伪真标签和采样得到的负标签之间进行训练。所以这里想记录下关系抽取任务以及命名实体识别任务在远程监督方式下的处理方法。</p>
+<h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>远程监督方法常见于关系抽取任务中，这里远程信号给予的弱信号描述为：若一个实体对在知识库中有定义关系类型，则任意句子中只要出现该实体对，该句子就描述这一关系类型。由于有标注的数据资源获取成本太高，借助知识库对齐方法在纯文本上远程标注，可以得到大量的训练预料。但是使用这种方法会带来两个方面的问题：一是噪声问题，由于远程监督方法是上下文无关的，即知识库里的实体对并不是在所有句子中都描述当前这一种关系类型，标注到的句子会存在噪声标签；二是长尾问题，即知识库里描述的关系类型有限，使得得到的数据标签分布不均衡。</p>
+<p>细粒度实体分类任务中也会用到远程监督方法构造语料库：先对提及进行实体链接，然后用该实体在知识库中对应的所有类型作为该提及的标签。</p>
+<h4 id="一点小前提"><a href="#一点小前提" class="headerlink" title="一点小前提"></a>一点小前提</h4><ol>
+<li><p>信息抽取（事件触发词、实体对etc）任务一般需要先识别span位置在做分类，这里提到的都只涉及分类这一子任务，即已知实体对的信息，直接对其分类即可。</p>
+</li>
+<li><p>事件抽取任务里，指定语境下的事件触发词只分类一种事件类型；</p>
+</li>
+<li><p>细粒度命名实体识别任务，mention在当前语境下的标签是否必须唯一？（不确定，看论文好像并没有必须保证这一点，待补充）。补充：分情景，有的可以分到多个正确标签，有的情况下是限定仅一个正确的标签路径。</p>
+</li>
+<li><p>远程监督方式对数据自动标注也有几种不同的做法：完全匹配的对齐；基于实体链接方法的对齐；只取标注词的标题词（head word）标签（假设当前词被标记到多个标签）</p>
+</li>
+</ol>
+<h2 id="一般式解决方案"><a href="#一般式解决方案" class="headerlink" title="一般式解决方案"></a>一般式解决方案</h2><h3 id="启发式标签剪枝"><a href="#启发式标签剪枝" class="headerlink" title="启发式标签剪枝"></a>启发式标签剪枝</h3><h4 id="基于规则"><a href="#基于规则" class="headerlink" title="基于规则"></a>基于规则</h4><p>这里参考论文：Context-Dependent Fine-Grained Entity Type Tagging。</p>
+<p>一般简易做法是将instance的类型集约束为与主题类型一致的类型，假设 <code>Barack Obama</code> 经知识库链接到 <code>person/politicalfigure</code> 和 <code>person/artist</code> ，观察到大多文本都是 <code>political-related</code> ，则这里的 <code>Barack Obama</code> 经标记为 <code>person/politicalfigure</code> </p>
+<p>这篇论文给出了三个基于规则的启发式标签剪枝。</p>
+<ul>
+<li>同层次剪枝：若一样本的标签类型为：<code>A/B,A/C</code>，则剪枝为 <code>A</code>  （说明：此处的B和C为同级标签类型）。假设一种情况，对一个instance来说，剪枝后的标签为 <code>A</code> ，但多数情况下应该为 <code>A/B</code> ，这里论文给出的原因是：期待从其他不常见instance中学习 <code>A/B</code> 的特征。</li>
+<li>粗粒度剪枝：设置少量个粗粒度类型标签，训练一个分类器，删除在该类型集上输出不一致的样本。粗粒度标签位于层次标签结构的上层，经这样的处理可以使得标记的标签与样本上下文的语境更为匹配。</li>
+<li>低频剪枝：当前类型标签出现次数少于某一阈值，则剪枝。原理起因于一个doc表达的主题与文中的mention或entity对应的类型强相关。</li>
+</ul>
+<p>关于如何做评估：人工标注。是的这一步逃不过，人工标注一些instance的标签，可以对instance在人工标注下和远程监督下得到的标签之间做评估，也可以直接拿来做测试集。</p>
+<h4 id="训练特定模型"><a href="#训练特定模型" class="headerlink" title="训练特定模型"></a>训练特定模型</h4><p>参考论文：Learning to Denoise Distantly-Labeled Data for Entity Typing</p>
+<p>流程简括：针对带噪声标签的数据训练专门训练一个模型，得到clean data，再用于相关任务。</p>
+<p>设计的模型：分别训练了两个模型：一个去噪模型，一个是标签分类模型。去噪模型由filtering模块和relabeling模块组成。这里的特征提取也考虑了标签，是对entity和label分别编码，基于提及和标签共同的特征表示再经过拼接or融合操作做下一步的预测。分类模型的特征提取阶段与去噪过程的类似，拿到instance的特征表示之后，基于标签训练多个二分类器，若标签预测值大雨一定阈值则采用，若所有标签都没有大于这个阈值的，就获取最大下标的label作为当前instance的标签。这样一看，可以说明实体提及的标签在一定语境下可以有一个或多个positive标签。</p>
+<p>需要的数据：人工标注一组带标签数据，使用远程监督得到一组噪声数据。去噪模型主要是对噪声数据进行处理，利用人工标注的golden数据构造error数据，在过滤阶段对低于阈值的数据进行丢弃，之后在重打标签阶段修正噪声数据的错误标签。修正后的噪声数据可以添加到训练数据当中去训练分类模型。</p>
+<h3 id="部分标记损失（Partial-label-loss）"><a href="#部分标记损失（Partial-label-loss）" class="headerlink" title="部分标记损失（Partial label loss）"></a>部分标记损失（Partial label loss）</h3><p>参考论文：AFET: Automatic Fine-Grained Entity Typing by Hierarchical Partial-Label Embedding</p>
+<p>参考论文：Label Noise Reduction in Entity Typing by Heterogeneous Partial-Label Embedding</p>
+<p>启发式去噪不同于部分标记损失方法的一点是：启发式方法需要人工标注得到golden数据。</p>
+<p>而这里的部分标记损失是希望通过远程监督自动标注得到的标签集合作为candidate type，与其他non candidate type之间做优化目标，训练得到candidate label set中的最大值作为positive perusal type，取non candidate type中的最大值作为negative perusal type，在这二者之间训练一个margin loss。这里论文给到的假设是：实体提及在同一空间上的特征表示与最大候选type的特征表示距离，要比到非候选type之间的距离近。</p>
+<p>补充：</p>
+<ul>
+<li>这里的距离可以用两特征之间的点积衡量，也可以用cos_similarity计算。</li>
+<li>mention、type都训练一个向量表示，初始化可采用随机方法。</li>
+</ul>
+<p>参考论文：Label-Free Distant Supervision for Relation Extraction via Knowledge Graph Embedding</p>
+<p>这篇论文也是采用的类似上述中的优化目标：定义instance表示为 <code>(h,r,t)</code> ， <code>h</code> 为head entity，t为tail entity，r为实体对在当前句子中经知识库链接到的关系类型，用TransE学习 <code>(h,r,t)</code>  的特征表示，转换可以得到关系表示 $r\approx{t-h}$，这样就可以用实体对表示关系了。对当前样例，使用margin loss优化，使得句子表示与positive$(t-h)$之间的距离更近，与negative$(t^{\prime}-h^{\prime})$之间的距离更远，其中负实体对可以在知识库中采样得到。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/2021/04/27/hello-world/">Hello World</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© JaLcy | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
